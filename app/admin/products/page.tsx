@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Product } from '@/types'
+import { Product, Category } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,6 +12,7 @@ import { Plus, Edit2, Trash2, Search, TableProperties, PackageX } from 'lucide-r
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
+  const [categoriesList, setCategoriesList] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -39,8 +40,12 @@ export default function ProductsPage() {
   }, [])
 
   const fetchProducts = async () => {
-    const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
-    if (data) setProducts(data as Product[])
+    const [prodRes, catRes] = await Promise.all([
+      supabase.from('products').select('*').order('created_at', { ascending: false }),
+      supabase.from('categories').select('*').order('name', { ascending: true })
+    ])
+    if (prodRes.data) setProducts(prodRes.data as Product[])
+    if (catRes.data) setCategoriesList(catRes.data as Category[])
     setLoading(false)
   }
 
@@ -225,14 +230,23 @@ export default function ProductsPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="category" className="text-gray-700 font-semibold">Categoría (Opcional)</Label>
-                <Input id="category" value={category} onChange={(e) => setCategory(e.target.value)} list="category-options" className="rounded-xl border-pink-100 focus-visible:ring-pink-500 h-11 bg-white" placeholder="Ej. Camisas, Ropa, Bolsos" />
-                <datalist id="category-options">
-                  <option value="Camisas" />
-                  <option value="Pantalones" />
-                  <option value="Ropa" />
-                  <option value="Bolsos" />
-                  <option value="Accesorios" />
-                </datalist>
+                {categoriesList.length > 0 ? (
+                  <select
+                    id="category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full rounded-xl border-pink-100 focus-visible:ring-pink-500 focus:ring-2 focus:ring-pink-500 border bg-white h-11 px-3 text-sm outline-none text-gray-900"
+                  >
+                    <option value="">-- Sin categoría --</option>
+                    {categoriesList.map(cat => (
+                      <option key={cat.id} value={cat.name}>{cat.name}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-200">
+                    No hay categorías creadas. Ve al menú "Categorías" para crear una.
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="badge" className="text-gray-700 font-semibold">Etiqueta Destacada (Opcional)</Label>

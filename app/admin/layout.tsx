@@ -11,7 +11,8 @@ import {
   Menu,
   CreditCard,
   Home,
-  Wallet
+  Wallet,
+  Tags
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -48,6 +49,7 @@ export default function AdminLayout({
     { href: '/admin/dashboard', icon: Home, label: 'Dashboard' },
     { href: '/admin/sales', icon: ShoppingCart, label: 'Logística de Ventas' },
     { href: '/admin/products', icon: Package, label: 'Inventario' },
+    { href: '/admin/categories', icon: Tags, label: 'Categorías' },
     { href: '/admin/debts', icon: CreditCard, label: 'Fiados (Cuentas)' },
     { href: '/admin/expenses', icon: Wallet, label: 'Control de Gastos' },
   ]
