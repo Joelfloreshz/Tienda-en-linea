@@ -6,7 +6,7 @@ import { Sale, Product } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { Search, ShoppingCart, MessageSquare, Plus, Trash2, PackageSearch, Truck, MapPin, CheckCircle2, Edit2, Send, Calendar } from 'lucide-react'
+import { Search, ShoppingCart, MessageSquare, Plus, Trash2, PackageSearch, Truck, MapPin, CheckCircle2, Edit2, Send, Calendar, Bell } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 
@@ -678,6 +678,17 @@ export default function SalesPage() {
                           <Button variant="ghost" size="icon" className="h-9 w-9 text-[#25D366] hover:bg-green-50 rounded-xl border border-green-100 bg-white shadow-sm" onClick={() => handleOpenWaModal(sale)} title="Notificar por WhatsApp">
                             <MessageSquare className="h-4 w-4" />
                           </Button>
+                        )}
+                        {sale.delivery_type === 'personal' && (
+                          <a 
+                            href={`https://wa.me/50378085138?text=${encodeURIComponent(`🔔 *RECORDATORIO DE ENTREGA* 🔔\n\n👤 *Cliente:* ${sale.client_name || 'Sin nombre'}\n👜 *Producto:* ${sale.quantity}x ${productName}\n💰 *A cobrar:* $${Number(sale.price).toFixed(2)}\n📍 *Lugar/Hora:* ${sale.delivery_notes}`)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center h-9 w-9 text-orange-500 hover:bg-orange-50 rounded-xl border border-orange-100 bg-white shadow-sm transition-colors"
+                            title="Enviarme recordatorio (Auto-WhatsApp)"
+                          >
+                            <Bell className="h-4 w-4" />
+                          </a>
                         )}
                       </div>
                     </td>
