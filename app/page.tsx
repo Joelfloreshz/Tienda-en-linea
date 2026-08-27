@@ -77,7 +77,7 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {products.map((product) => (
-                <div key={product.id} className="group flex flex-col bg-white/70 backdrop-blur-xl rounded-3xl overflow-hidden shadow-lg border border-white/60 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+                <div key={product.id} id={`producto-${product.id}`} className="group flex flex-col bg-white/70 backdrop-blur-xl rounded-3xl overflow-hidden shadow-lg border border-white/60 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
                   <div className="aspect-[4/5] relative bg-pink-100/50 overflow-hidden">
                     {product.photo_url ? (
                       <Image 
@@ -105,15 +105,18 @@ export default function Home() {
                       </span>
                     </div>
                     <div className="mt-auto pt-4 flex items-center justify-between">
-                      <a 
-                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Hola Lovely Bags! 💕✨ Me encantó el producto *${product.name}* y me gustaría comprarlo. ¿Aún está disponible? 🛍️💖${product.photo_url ? `\n\n📸 Foto: ${product.photo_url}` : ''}`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button 
+                        onClick={() => {
+                          const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                          const productUrl = `${origin}/#producto-${product.id}`;
+                          const text = `¡Hola Lovely Bags! 💕✨ Me encantó el producto *${product.name}* y me gustaría comprarlo. ¿Aún está disponible? 🛍️💖\n\n🔗 Ver producto en la tienda: ${productUrl}`;
+                          window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
+                        }}
                         className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-2xl flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-green-500/30 w-full justify-center group/btn"
                       >
                         <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="group-hover/btn:scale-110 transition-transform"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                         Pedir ahora
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
