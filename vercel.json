@@ -1,3 +1,13 @@
 {
-  "name": "lovely-bags-app"
+  "name": "lovely-bags-app",
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_0xYFmlE16p4Mzr9-lI263Q_E7P0gzgw",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://hpshytouxcvmmjmeizrq.supabase.co"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_0xYFmlE16p4Mzr9-lI263Q_E7P0gzgw",
+      "NEXT_PUBLIC_SUPABASE_URL": "https://hpshytouxcvmmjmeizrq.supabase.co"
+    }
+  }
 }

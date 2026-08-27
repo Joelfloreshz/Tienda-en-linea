@@ -46,7 +46,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="bg-white/80 p-2 rounded-full shadow-inner border border-pink-100">
-                <img src="/logo.jpeg" alt="Logo" className="h-10 w-10 object-contain rounded-full" />
+                <img src="/Logo.jpeg" alt="Logo" className="h-10 w-10 object-contain rounded-full" />
               </div>
               <h1 className="text-2xl font-extrabold text-pink-600 tracking-tight flex items-center gap-2 drop-shadow-sm">
                 Lovely Bags <Sparkles className="h-5 w-5 text-pink-500 animate-pulse" />
@@ -127,7 +127,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 text-center">
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="bg-white p-2 rounded-full shadow-sm">
-                 <img src="/logo.jpeg" alt="Logo" className="h-8 w-8 object-contain rounded-full opacity-70 grayscale hover:grayscale-0 transition-all" />
+                 <img src="/Logo.jpeg" alt="Logo" className="h-8 w-8 object-contain rounded-full opacity-70 grayscale hover:grayscale-0 transition-all" />
               </div>
               <span className="text-2xl font-bold text-gray-500">Lovely Bags</span>
             </div>

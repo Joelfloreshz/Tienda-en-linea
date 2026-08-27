@@ -60,7 +60,7 @@ export default function LoginPage() {
           
           {/* Logo y Encabezado */}
           <div className="bg-white p-3 rounded-3xl shadow-sm mb-6 border border-pink-50 transform hover:rotate-12 transition-transform duration-500">
-            <Image src="/logo.jpeg" alt="Logo" width={70} height={70} className="rounded-2xl object-contain" />
+            <Image src="/Logo.jpeg" alt="Logo" width={70} height={70} className="rounded-2xl object-contain" />
           </div>
           
           <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2 mb-2">

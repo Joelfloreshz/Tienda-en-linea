@@ -78,7 +78,7 @@ export default function AdminLayout({
         <div className="flex h-20 items-center border-b border-pink-100 px-8">
           <Link href="/admin/dashboard" className="flex items-center gap-3 font-extrabold text-2xl text-pink-500 transition-transform hover:scale-105">
             <div className="bg-pink-100 p-2 rounded-2xl shadow-inner">
-              <img src="/logo.jpeg" alt="Logo" className="h-8 w-8 object-contain rounded-full" />
+              <img src="/Logo.jpeg" alt="Logo" className="h-8 w-8 object-contain rounded-full" />
             </div>
             <span>Lovely Bags</span>
           </Link>
@@ -117,7 +117,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Mobile Sidebar & Main Content */}
-      <div className="flex flex-col flex-1 relative z-10">
+      <div className="flex flex-col flex-1 relative z-10 min-w-0">
         <header className="flex h-20 items-center gap-4 border-b border-pink-100 bg-white/60 backdrop-blur-md px-4 lg:px-8 sticky top-0 z-30 shadow-sm">
           <Sheet>
             <SheetTrigger render={<Button variant="outline" size="icon" className="shrink-0 md:hidden border-pink-200 text-pink-500 hover:bg-pink-50 rounded-xl" />}>
@@ -127,7 +127,7 @@ export default function AdminLayout({
             <SheetContent side="left" className="flex flex-col bg-white border-pink-100 w-72 p-0">
               <div className="flex h-20 items-center border-b border-pink-100 px-6 bg-pink-50/50">
                 <Link href="/admin/dashboard" className="flex items-center gap-3 font-extrabold text-2xl text-pink-500">
-                  <img src="/logo.jpeg" alt="Logo" className="h-8 w-8 object-contain rounded-full shadow-sm" />
+                  <img src="/Logo.jpeg" alt="Logo" className="h-8 w-8 object-contain rounded-full shadow-sm" />
                   <span>Lovely Bags</span>
                 </Link>
               </div>
@@ -167,7 +167,7 @@ export default function AdminLayout({
           <AlertsMenu />
         </header>
 
-        <main className="flex-1 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto w-full">
+        <main className="flex-1 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto w-full min-w-0">
           {children}
         </main>
       </div>
