@@ -304,7 +304,7 @@ export default function SalesPage() {
       </div>
 
       {/* REGISTRO RÁPIDO REDISEÑADO */}
-      <div className="bg-white/90 backdrop-blur-2xl p-6 rounded-3xl shadow-lg border border-white/60">
+      <div className="relative z-20 bg-white/90 backdrop-blur-2xl p-6 rounded-3xl shadow-lg border border-white/60">
         <h3 className="text-lg font-extrabold text-gray-900 mb-6 flex items-center gap-2 border-b border-gray-100 pb-3">
           <Plus className="h-5 w-5 text-pink-500" /> Registrar Venta / Envío
         </h3>
@@ -337,7 +337,7 @@ export default function SalesPage() {
                     )}
                   </div>
                   {isProductDropdownOpen && (
-                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-2xl max-h-60 overflow-auto">
+                    <div className="w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-inner max-h-60 overflow-y-auto animate-in slide-in-from-top-2">
                       {products.map(p => (
                         <div 
                           key={p.id} 
