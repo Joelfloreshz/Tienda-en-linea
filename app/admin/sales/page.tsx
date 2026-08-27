@@ -24,7 +24,7 @@ export default function SalesPage() {
   // Quick entry state 
   const [newSale, setNewSale] = useState({
     product_id: '',
-    quantity: '' as number | string,
+    quantity: '1' as number | string,
     client_name: '',
     client_phone: '',
     price: '' as number | string,
@@ -210,7 +210,7 @@ export default function SalesPage() {
       
       setNewSale({
         product_id: '',
-        quantity: '',
+        quantity: '1',
         client_name: '',
         client_phone: '',
         price: '',
@@ -428,8 +428,8 @@ export default function SalesPage() {
                     value={newSale.payment_status}
                     onChange={(e) => setNewSale({...newSale, payment_status: e.target.value as any})}
                   >
-                    <option value="paid">✅ Pagado Totalmente</option>
-                    <option value="pending">⏳ {newSale.delivery_type === 'casillero' ? 'Cobro Contra Entrega' : 'Fíado (Aún no paga)'}</option>
+                    <option value="paid">✅ Pagado Total</option>
+                    <option value="pending">⏳ Cobro Contra Entrega</option>
                     <option value="partial">💰 Anticipo (Abono Parcial)</option>
                   </select>
                 </div>
