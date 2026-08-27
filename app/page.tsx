@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Product } from '@/types'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ShoppingBag, Sparkles, MessageCircle } from 'lucide-react'
 
 export default function Home() {
@@ -77,8 +78,8 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {products.map((product) => (
-                <div key={product.id} id={`producto-${product.id}`} className="group flex flex-col bg-white/70 backdrop-blur-xl rounded-3xl overflow-hidden shadow-lg border border-white/60 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
-                  <div className="aspect-[4/5] relative bg-pink-100/50 overflow-hidden">
+                <div key={product.id} className="group flex flex-col bg-white/70 backdrop-blur-xl rounded-3xl overflow-hidden shadow-lg border border-white/60 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+                  <Link href={`/producto/${product.id}`} className="aspect-[4/5] relative bg-pink-100/50 overflow-hidden block">
                     {product.photo_url ? (
                       <Image 
                         src={product.photo_url} 
@@ -92,12 +93,14 @@ export default function Home() {
                       </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-pink-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
+                  </Link>
                   
                   <div className="p-6 flex flex-col flex-grow relative z-10 bg-white/80 backdrop-blur-md">
-                    <h4 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-pink-600 transition-colors">
-                      {product.name}
-                    </h4>
+                    <Link href={`/producto/${product.id}`} className="block">
+                      <h4 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-pink-600 transition-colors">
+                        {product.name}
+                      </h4>
+                    </Link>
                     <div className="flex flex-col mb-4">
                       <span className="text-sm text-gray-600 font-semibold uppercase tracking-wider">Precio</span>
                       <span className="text-3xl font-extrabold text-pink-600 drop-shadow-sm">
@@ -108,7 +111,7 @@ export default function Home() {
                       <button 
                         onClick={() => {
                           const origin = typeof window !== 'undefined' ? window.location.origin : '';
-                          const productUrl = `${origin}/#producto-${product.id}`;
+                          const productUrl = `${origin}/producto/${product.id}`;
                           const text = `¡Hola Lovely Bags! 💕✨ Me encantó el producto *${product.name}* y me gustaría comprarlo. ¿Aún está disponible? 🛍️💖\n\n🔗 Ver producto en la tienda: ${productUrl}`;
                           window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
                         }}
