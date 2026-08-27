@@ -15,6 +15,7 @@ export default function SalesPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false)
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
@@ -317,16 +318,49 @@ export default function SalesPage() {
             <div className="space-y-3">
               <div>
                 <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1 block">Producto *</label>
-                <select 
-                  className="w-full h-11 px-4 rounded-xl border border-pink-100 bg-white font-medium focus:ring-2 focus:ring-pink-500 outline-none"
-                  value={newSale.product_id}
-                  onChange={(e) => setNewSale({...newSale, product_id: e.target.value})}
-                >
-                  <option value="">Selecciona...</option>
-                  {products.map(p => (
-                    <option key={p.id} value={p.id}>{p.name} (${p.price} | Stock: {p.stock})</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <div 
+                    className="w-full h-11 px-4 rounded-xl border border-pink-100 bg-white font-medium flex items-center justify-between cursor-pointer"
+                    onClick={() => setIsProductDropdownOpen(!isProductDropdownOpen)}
+                  >
+                    {newSale.product_id ? (
+                      <div className="flex items-center gap-2">
+                        {products.find(p => p.id === newSale.product_id)?.photo_url ? (
+                          <img src={products.find(p => p.id === newSale.product_id)!.photo_url!} className="h-6 w-6 rounded-md object-cover" />
+                        ) : (
+                          <div className="h-6 w-6 rounded-md bg-gray-100" />
+                        )}
+                        <span className="truncate">{products.find(p => p.id === newSale.product_id)?.name}</span>
+                      </div>
+                    ) : (
+                      <span className="text-gray-500">Selecciona un producto...</span>
+                    )}
+                  </div>
+                  {isProductDropdownOpen && (
+                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-2xl max-h-60 overflow-auto">
+                      {products.map(p => (
+                        <div 
+                          key={p.id} 
+                          className="flex items-center gap-3 p-3 hover:bg-pink-50 cursor-pointer border-b border-gray-50 last:border-0"
+                          onClick={() => {
+                             setNewSale({...newSale, product_id: p.id});
+                             setIsProductDropdownOpen(false);
+                          }}
+                        >
+                          {p.photo_url ? (
+                            <img src={p.photo_url} className="h-10 w-10 rounded-lg object-cover shadow-sm" />
+                          ) : (
+                            <div className="h-10 w-10 rounded-lg bg-gray-100 shadow-sm" />
+                          )}
+                          <div className="flex flex-col">
+                            <span className="font-bold text-sm text-gray-900">{p.name}</span>
+                            <span className="text-xs font-semibold text-pink-600">${Number(p.price).toFixed(2)} <span className="text-gray-400 font-normal">| Stock: {p.stock}</span></span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="flex gap-3">
                 <div className="flex-1">
