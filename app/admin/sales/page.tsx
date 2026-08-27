@@ -283,26 +283,7 @@ export default function SalesPage() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-          <Input 
-            placeholder="Buscar por cliente o producto..." 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-12 bg-white/70 backdrop-blur-md border-white/50 shadow-sm rounded-2xl h-12 focus-visible:ring-pink-500 text-base"
-          />
-        </div>
-        <div className="relative">
-          <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-          <Input 
-            type="month"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            className="pl-12 bg-white/70 backdrop-blur-md border-white/50 shadow-sm rounded-2xl h-12 focus-visible:ring-pink-500 font-bold text-gray-700"
-          />
-        </div>
-      </div>
+
 
       {/* REGISTRO RÁPIDO REDISEÑADO */}
       <div className="relative z-20 bg-white/90 backdrop-blur-2xl p-6 rounded-3xl shadow-lg border border-white/60">
@@ -566,15 +547,32 @@ export default function SalesPage() {
         </DialogContent>
       </Dialog>
 
-      {/* FILTROS Y BÚSQUEDA */}
-      <div className="relative max-w-md">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-        <Input 
-          placeholder="Buscar por cliente o producto..." 
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-12 bg-white/70 backdrop-blur-md border-white/50 shadow-sm rounded-2xl h-12 focus-visible:ring-pink-500"
-        />
+      {/* FILTROS Y BÚSQUEDA REDISEÑADO */}
+      <div className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl shadow-sm border border-white/50 mt-8 mb-6">
+        <h3 className="text-sm font-extrabold text-gray-800 mb-4 flex items-center gap-2 uppercase tracking-widest">
+          <PackageSearch className="h-5 w-5 text-pink-500" />
+          Buscador y Filtros de Logística
+        </h3>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-pink-400" />
+            <Input 
+              placeholder="Buscar envío por cliente o producto..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-12 bg-white/90 border-pink-100 shadow-inner rounded-2xl h-12 focus-visible:ring-2 focus-visible:ring-pink-400 text-gray-700 font-medium w-full text-base transition-all"
+            />
+          </div>
+          <div className="relative sm:max-w-[250px] w-full">
+            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-purple-400" />
+            <Input 
+              type="month"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="pl-12 bg-white/90 border-purple-100 shadow-inner rounded-2xl h-12 focus-visible:ring-2 focus-visible:ring-purple-400 font-bold text-gray-700 w-full transition-all"
+            />
+          </div>
+        </div>
       </div>
 
       {/* TABLA DE LOGÍSTICA ESTILO ERP */}
