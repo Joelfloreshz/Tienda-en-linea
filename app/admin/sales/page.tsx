@@ -16,6 +16,7 @@ export default function SalesPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false)
+  const [productSearch, setProductSearch] = useState('')
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
@@ -337,27 +338,42 @@ export default function SalesPage() {
                     )}
                   </div>
                   {isProductDropdownOpen && (
-                    <div className="w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-inner max-h-60 overflow-y-auto animate-in slide-in-from-top-2">
-                      {products.map(p => (
-                        <div 
-                          key={p.id} 
-                          className="flex items-center gap-3 p-3 hover:bg-pink-50 cursor-pointer border-b border-gray-50 last:border-0"
-                          onClick={() => {
-                             setNewSale({...newSale, product_id: p.id});
-                             setIsProductDropdownOpen(false);
-                          }}
-                        >
-                          {p.photo_url ? (
-                            <img src={p.photo_url} className="h-10 w-10 rounded-lg object-cover shadow-sm" />
-                          ) : (
-                            <div className="h-10 w-10 rounded-lg bg-gray-100 shadow-sm" />
-                          )}
-                          <div className="flex flex-col">
-                            <span className="font-bold text-sm text-gray-900">{p.name}</span>
-                            <span className="text-xs font-semibold text-pink-600">${Number(p.price).toFixed(2)} <span className="text-gray-400 font-normal">| Stock: {p.stock}</span></span>
+                    <div className="w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-inner max-h-80 overflow-hidden flex flex-col animate-in slide-in-from-top-2">
+                      <div className="p-2 border-b border-gray-100 bg-gray-50/50 sticky top-0 z-10">
+                        <Input 
+                          placeholder="🔍 Buscar producto..." 
+                          value={productSearch}
+                          onChange={(e) => setProductSearch(e.target.value)}
+                          className="h-9 bg-white border-gray-200 focus-visible:ring-pink-500 text-sm"
+                          autoFocus
+                        />
+                      </div>
+                      <div className="overflow-y-auto max-h-60">
+                        {products.filter(p => p.name.toLowerCase().includes(productSearch.toLowerCase())).map(p => (
+                          <div 
+                            key={p.id} 
+                            className="flex items-center gap-3 p-3 hover:bg-pink-50 cursor-pointer border-b border-gray-50 last:border-0"
+                            onClick={() => {
+                               setNewSale({...newSale, product_id: p.id});
+                               setIsProductDropdownOpen(false);
+                               setProductSearch(''); // reset search after select
+                            }}
+                          >
+                            {p.photo_url ? (
+                              <img src={p.photo_url} className="h-10 w-10 rounded-lg object-cover shadow-sm" />
+                            ) : (
+                              <div className="h-10 w-10 rounded-lg bg-gray-100 shadow-sm" />
+                            )}
+                            <div className="flex flex-col">
+                              <span className="font-bold text-sm text-gray-900">{p.name}</span>
+                              <span className="text-xs font-semibold text-pink-600">${Number(p.price).toFixed(2)} <span className="text-gray-400 font-normal">| Stock: {p.stock}</span></span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                        {products.filter(p => p.name.toLowerCase().includes(productSearch.toLowerCase())).length === 0 && (
+                          <div className="p-4 text-center text-gray-500 text-sm">No se encontraron productos.</div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
