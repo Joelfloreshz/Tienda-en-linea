@@ -127,9 +127,13 @@ export default function ProductPage() {
                   )}
                 </div>
                 <p className="text-gray-500 leading-relaxed font-medium">
-                  Descubre la elegancia y versatilidad con este artículo exclusivo. 
-                  Diseñado para complementar tu estilo único en cualquier ocasión. 
-                  Calidad premium garantizada por Lovely Bags.
+                  {product.description || (
+                    <>
+                      Descubre la elegancia y versatilidad con este artículo exclusivo. 
+                      Diseñado para complementar tu estilo único en cualquier ocasión. 
+                      Calidad premium garantizada por Lovely Bags.
+                    </>
+                  )}
                 </p>
               </div>
 

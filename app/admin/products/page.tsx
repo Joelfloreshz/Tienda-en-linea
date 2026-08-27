@@ -19,6 +19,7 @@ export default function ProductsPage() {
   
   // Form states (Initialized as empty string to fix the "025" bug)
   const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
   const [stock, setStock] = useState<number | string>('')
   const [cost, setCost] = useState<number | string>('')
   const [price, setPrice] = useState<number | string>('')
@@ -43,6 +44,7 @@ export default function ProductsPage() {
 
   const resetForm = () => {
     setName('')
+    setDescription('')
     setStock('')
     setCost('')
     setPrice('')
@@ -54,6 +56,7 @@ export default function ProductsPage() {
     if (product) {
       setEditingProduct(product)
       setName(product.name)
+      setDescription(product.description || '')
       setStock(product.stock)
       setCost(product.cost)
       setPrice(product.price)
@@ -100,14 +103,14 @@ export default function ProductsPage() {
       if (editingProduct) {
         const { error } = await supabase
           .from('products')
-          .update({ name, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url })
+          .update({ name, description, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url })
           .eq('id', editingProduct.id)
         if (error) throw error
         toast.success('Producto actualizado')
       } else {
         const { error } = await supabase
           .from('products')
-          .insert([{ name, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url }])
+          .insert([{ name, description, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url }])
         if (error) throw error
 
         if (parsedStock > 0 && parsedCost > 0) {
@@ -213,6 +216,10 @@ export default function ProductsPage() {
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-gray-700 font-semibold">Nombre del Producto</Label>
                 <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required autoFocus className="rounded-xl border-pink-100 focus-visible:ring-pink-500 h-11 bg-white" placeholder="Ej. Bolso Elegance" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-gray-700 font-semibold">Descripción (Opcional)</Label>
+                <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full rounded-xl border-pink-100 focus-visible:ring-pink-500 focus:ring-2 focus:ring-pink-500 border bg-white p-3 text-sm outline-none resize-none h-20" placeholder="Ej. Material sintético, 3 compartimentos..."></textarea>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
