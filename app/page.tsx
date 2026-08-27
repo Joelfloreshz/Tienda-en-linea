@@ -10,6 +10,7 @@ import { ShoppingBag, Sparkles, MessageCircle } from 'lucide-react'
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const WHATSAPP_NUMBER = "50378085138"
 
   useEffect(() => {
@@ -25,6 +26,9 @@ export default function Home() {
     }
     fetchProducts()
   }, [])
+
+  const categories = Array.from(new Set(products.map(p => p.category).filter(Boolean))) as string[]
+  const filteredProducts = selectedCategory ? products.filter(p => p.category === selectedCategory) : products
 
   return (
     <div className="min-h-screen relative overflow-hidden font-sans">
@@ -67,6 +71,35 @@ export default function Home() {
           </p>
         </div>
 
+        {/* Filtros de Categorías */}
+        {!loading && categories.length > 0 && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 flex flex-wrap gap-3 justify-center">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-300 shadow-sm border ${
+                selectedCategory === null 
+                  ? 'bg-pink-500 text-white border-pink-500 shadow-pink-200' 
+                  : 'bg-white/70 text-gray-600 border-pink-100 hover:bg-pink-50 hover:text-pink-600'
+              }`}
+            >
+              Todos
+            </button>
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-300 shadow-sm border ${
+                  selectedCategory === cat 
+                    ? 'bg-pink-500 text-white border-pink-500 shadow-pink-200' 
+                    : 'bg-white/70 text-gray-600 border-pink-100 hover:bg-pink-50 hover:text-pink-600'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Catálogo Grid */}
         <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full">
           {loading ? (
@@ -75,9 +108,15 @@ export default function Home() {
                 <div key={i} className="animate-pulse bg-white/40 backdrop-blur-md rounded-3xl h-[400px] border border-white/50 shadow-sm"></div>
               ))}
             </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="text-center py-20">
+              <ShoppingBag className="mx-auto h-16 w-16 text-pink-300 opacity-50 mb-4" />
+              <h3 className="text-2xl font-bold text-gray-600">No hay productos en esta categoría</h3>
+              <button onClick={() => setSelectedCategory(null)} className="mt-4 text-pink-500 font-bold hover:underline">Ver todos los productos</button>
+            </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <div key={product.id} className="group flex flex-col bg-white/70 backdrop-blur-xl rounded-3xl overflow-hidden shadow-lg border border-white/60 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
                   <Link href={`/producto/${product.id}`} className="aspect-[4/5] relative bg-pink-100/50 overflow-hidden block">
                     {product.photo_url ? (
@@ -97,9 +136,14 @@ export default function Home() {
                   
                   <div className="p-6 flex flex-col flex-grow relative z-10 bg-white/80 backdrop-blur-md">
                     <Link href={`/producto/${product.id}`} className="block">
-                      <h4 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-pink-600 transition-colors">
+                      <h4 className="text-xl font-bold text-gray-900 mb-1 line-clamp-2 group-hover:text-pink-600 transition-colors">
                         {product.name}
                       </h4>
+                      {product.category && (
+                        <span className="inline-block text-[11px] font-bold text-pink-500 bg-pink-50 px-2.5 py-0.5 rounded-full mb-3 border border-pink-100">
+                          {product.category}
+                        </span>
+                      )}
                     </Link>
                     <div className="flex flex-col mb-4">
                       <span className="text-sm text-gray-600 font-semibold uppercase tracking-wider">Precio</span>

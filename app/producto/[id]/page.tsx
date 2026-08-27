@@ -104,9 +104,16 @@ export default function ProductPage() {
 
             {/* Información del Producto */}
             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white/40">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-100 text-pink-600 font-bold text-xs uppercase tracking-widest mb-6 w-fit shadow-inner">
-                <Sparkles className="h-3 w-3" />
-                {product.badge || 'Edición Especial'}
+              <div className="flex flex-wrap gap-2 mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-100 text-pink-600 font-bold text-xs uppercase tracking-widest w-fit shadow-inner">
+                  <Sparkles className="h-3 w-3" />
+                  {product.badge || 'Edición Especial'}
+                </div>
+                {product.category && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 text-purple-600 font-bold text-xs uppercase tracking-widest w-fit shadow-inner">
+                    {product.category}
+                  </div>
+                )}
               </div>
               
               <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">

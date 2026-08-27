@@ -19,6 +19,7 @@ export default function ProductsPage() {
   
   // Form states (Initialized as empty string to fix the "025" bug)
   const [name, setName] = useState('')
+  const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
   const [badge, setBadge] = useState('')
   const [stock, setStock] = useState<number | string>('')
@@ -45,6 +46,7 @@ export default function ProductsPage() {
 
   const resetForm = () => {
     setName('')
+    setCategory('')
     setDescription('')
     setBadge('')
     setStock('')
@@ -58,6 +60,7 @@ export default function ProductsPage() {
     if (product) {
       setEditingProduct(product)
       setName(product.name)
+      setCategory(product.category || '')
       setDescription(product.description || '')
       setBadge(product.badge || '')
       setStock(product.stock)
@@ -106,14 +109,14 @@ export default function ProductsPage() {
       if (editingProduct) {
         const { error } = await supabase
           .from('products')
-          .update({ name, description, badge, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url })
+          .update({ name, category: category || null, description, badge, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url })
           .eq('id', editingProduct.id)
         if (error) throw error
         toast.success('Producto actualizado')
       } else {
         const { error } = await supabase
           .from('products')
-          .insert([{ name, description, badge, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url }])
+          .insert([{ name, category: category || null, description, badge, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url }])
         if (error) throw error
 
         if (parsedStock > 0 && parsedCost > 0) {
@@ -221,6 +224,17 @@ export default function ProductsPage() {
                 <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required autoFocus className="rounded-xl border-pink-100 focus-visible:ring-pink-500 h-11 bg-white" placeholder="Ej. Bolso Elegance" />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="category" className="text-gray-700 font-semibold">Categoría (Opcional)</Label>
+                <Input id="category" value={category} onChange={(e) => setCategory(e.target.value)} list="category-options" className="rounded-xl border-pink-100 focus-visible:ring-pink-500 h-11 bg-white" placeholder="Ej. Camisas, Ropa, Bolsos" />
+                <datalist id="category-options">
+                  <option value="Camisas" />
+                  <option value="Pantalones" />
+                  <option value="Ropa" />
+                  <option value="Bolsos" />
+                  <option value="Accesorios" />
+                </datalist>
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="badge" className="text-gray-700 font-semibold">Etiqueta Destacada (Opcional)</Label>
                 <Input id="badge" value={badge} onChange={(e) => setBadge(e.target.value)} className="rounded-xl border-pink-100 focus-visible:ring-pink-500 h-11 bg-white" placeholder="Ej. Edición Especial, Única, Nuevo" />
               </div>
@@ -306,6 +320,7 @@ export default function ProductsPage() {
               <tr>
                 <th className="px-6 py-4 font-bold tracking-wider">Img</th>
                 <th className="px-6 py-4 font-bold tracking-wider">Producto</th>
+                <th className="px-6 py-4 font-bold tracking-wider">Categoría</th>
                 <th className="px-6 py-4 text-center font-bold tracking-wider">Stock</th>
                 <th className="px-6 py-4 text-right font-bold tracking-wider">Costo</th>
                 <th className="px-6 py-4 text-right font-bold tracking-wider">Precio Venta</th>
@@ -329,6 +344,13 @@ export default function ProductsPage() {
                     </td>
                     <td className="px-6 py-3 font-bold text-gray-900 text-base truncate max-w-[250px]" title={product.name}>
                       {product.name}
+                    </td>
+                    <td className="px-6 py-3 text-sm text-gray-500 font-medium">
+                      {product.category ? (
+                        <span className="bg-pink-50 text-pink-700 px-2.5 py-1 rounded-md border border-pink-100">{product.category}</span>
+                      ) : (
+                        <span className="italic text-gray-300">Sin categoría</span>
+                      )}
                     </td>
                     <td className="px-6 py-3 text-center">
                       <span className={`inline-flex items-center justify-center min-w-[3rem] px-2 py-1 rounded-lg font-extrabold text-xs shadow-sm
