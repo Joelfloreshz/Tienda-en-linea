@@ -20,6 +20,7 @@ export default function ProductsPage() {
   // Form states (Initialized as empty string to fix the "025" bug)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [badge, setBadge] = useState('')
   const [stock, setStock] = useState<number | string>('')
   const [cost, setCost] = useState<number | string>('')
   const [price, setPrice] = useState<number | string>('')
@@ -45,6 +46,7 @@ export default function ProductsPage() {
   const resetForm = () => {
     setName('')
     setDescription('')
+    setBadge('')
     setStock('')
     setCost('')
     setPrice('')
@@ -57,6 +59,7 @@ export default function ProductsPage() {
       setEditingProduct(product)
       setName(product.name)
       setDescription(product.description || '')
+      setBadge(product.badge || '')
       setStock(product.stock)
       setCost(product.cost)
       setPrice(product.price)
@@ -103,14 +106,14 @@ export default function ProductsPage() {
       if (editingProduct) {
         const { error } = await supabase
           .from('products')
-          .update({ name, description, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url })
+          .update({ name, description, badge, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url })
           .eq('id', editingProduct.id)
         if (error) throw error
         toast.success('Producto actualizado')
       } else {
         const { error } = await supabase
           .from('products')
-          .insert([{ name, description, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url }])
+          .insert([{ name, description, badge, stock: parsedStock, cost: parsedCost, price: parsedPrice, photo_url }])
         if (error) throw error
 
         if (parsedStock > 0 && parsedCost > 0) {
@@ -216,6 +219,10 @@ export default function ProductsPage() {
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-gray-700 font-semibold">Nombre del Producto</Label>
                 <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required autoFocus className="rounded-xl border-pink-100 focus-visible:ring-pink-500 h-11 bg-white" placeholder="Ej. Bolso Elegance" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="badge" className="text-gray-700 font-semibold">Etiqueta Destacada (Opcional)</Label>
+                <Input id="badge" value={badge} onChange={(e) => setBadge(e.target.value)} className="rounded-xl border-pink-100 focus-visible:ring-pink-500 h-11 bg-white" placeholder="Ej. Edición Especial, Única, Nuevo" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-gray-700 font-semibold">Descripción (Opcional)</Label>

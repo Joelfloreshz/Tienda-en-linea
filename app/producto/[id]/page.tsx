@@ -106,7 +106,7 @@ export default function ProductPage() {
             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white/40">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-100 text-pink-600 font-bold text-xs uppercase tracking-widest mb-6 w-fit shadow-inner">
                 <Sparkles className="h-3 w-3" />
-                Edición Especial
+                {product.badge || 'Edición Especial'}
               </div>
               
               <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">

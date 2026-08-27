@@ -6,6 +6,7 @@ export interface Product {
   cost: number
   price: number
   description: string | null
+  badge: string | null
   created_at: string
 }
 
