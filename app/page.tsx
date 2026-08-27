@@ -106,7 +106,7 @@ export default function Home() {
                     </div>
                     <div className="mt-auto pt-4 flex items-center justify-between">
                       <a 
-                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Hola Lovely Bags! 💕✨ Me enamoré de la cartera *${product.name}* y me gustaría comprarla. ¿Aún está disponible? 🛍️💖`)}`}
+                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Hola Lovely Bags! 💕✨ Me encantó el producto *${product.name}* y me gustaría comprarlo. ¿Aún está disponible? 🛍️💖${product.photo_url ? `\n\n📸 Foto: ${product.photo_url}` : ''}`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-2xl flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-green-500/30 w-full justify-center group/btn"
