@@ -136,10 +136,8 @@ export default function CategoriesPage() {
         </div>
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-pink-500 to-pink-400 hover:from-pink-600 hover:to-pink-500 text-white rounded-2xl shadow-lg shadow-pink-200 hover:shadow-pink-300 transition-all hover:-translate-y-1 h-12 px-6" onClick={() => handleOpenDialog()}>
+          <DialogTrigger render={<Button className="bg-gradient-to-r from-pink-500 to-pink-400 hover:from-pink-600 hover:to-pink-500 text-white rounded-2xl shadow-lg shadow-pink-200 hover:shadow-pink-300 transition-all hover:-translate-y-1 h-12 px-6" onClick={() => handleOpenDialog()} />}>
               <Plus className="mr-2 h-5 w-5" /> Nueva Categoría
-            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[400px] rounded-3xl border-pink-100 p-0 overflow-hidden shadow-2xl">
             <div className="bg-gradient-to-r from-pink-50 to-white p-6 border-b border-pink-100">
