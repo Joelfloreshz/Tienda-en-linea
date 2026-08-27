@@ -50,7 +50,7 @@ export default function SalesPage() {
   const handleOpenWaModal = (sale: any) => {
     setWaSale(sale)
     setWaGreeting('Buenos días ☀️')
-    setWaMessageType(sale.delivery_type === 'casillero' ? 'casillero' : sale.delivery_type === 'personal' ? 'personal' : 'preparando')
+    setWaMessageType(sale.delivery_type === 'casillero' ? 'casillero' : sale.delivery_type === 'personal' ? 'personal' : sale.delivery_type === 'delivery' ? 'delivery' : 'preparando')
     setWaModalOpen(true)
   }
 
@@ -70,6 +70,8 @@ export default function SalesPage() {
       text += `¡excelentes noticias! Tu pedido de ${productName} ya está en ${waSale.delivery_notes || 'el casillero'} listo para retirar. Recuerda cancelar el total ahí mismo. ✨`
     } else if (waMessageType === 'personal') {
       text += `te confirmo nuestra entrega personal de ${productName} en ${waSale.delivery_notes}. ¿Nos vemos allá? 🤝`
+    } else if (waMessageType === 'delivery') {
+      text += `estamos preparando tu envío por Delivery hacia ${waSale.delivery_notes}. ¡Pronto te compartiremos el comprobante! 🛵`
     } else {
       text += `te escribimos de Lovely Bags sobre tu pedido de ${productName}. 💖`
     }
@@ -389,17 +391,18 @@ export default function SalesPage() {
                   onChange={(e) => setNewSale({...newSale, delivery_type: e.target.value as any})}
                 >
                   <option value="casillero">📦 Dejar en Casillero</option>
+                  <option value="delivery">🛵 Delivery a Domicilio</option>
                   <option value="personal">🤝 Entrega Personal</option>
                   <option value="local">🏪 Venta en Local Directo</option>
                 </select>
               </div>
 
-              {(newSale.delivery_type === 'casillero' || newSale.delivery_type === 'personal') && (
+              {newSale.delivery_type !== 'local' && (
                 <div>
                   <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1 block">
-                    {newSale.delivery_type === 'casillero' ? 'Nombre Casillero / Detalles' : 'Lugar y Hora de Encuentro *'}
+                    {newSale.delivery_type === 'casillero' ? 'Nombre Casillero / Detalles' : newSale.delivery_type === 'delivery' ? 'Dirección Completa *' : 'Lugar y Hora de Encuentro *'}
                   </label>
-                  <Input placeholder={newSale.delivery_type === 'casillero' ? 'Ej. Casillero Express' : 'Ej. Metrocentro, 3:00 PM'} className="h-11 rounded-xl border-purple-200 font-medium bg-white" value={newSale.delivery_notes} onChange={(e) => setNewSale({...newSale, delivery_notes: e.target.value})} />
+                  <Input placeholder={newSale.delivery_type === 'casillero' ? 'Ej. Casillero Express' : newSale.delivery_type === 'delivery' ? 'Ej. San Miguel, Col. Centro' : 'Ej. Metrocentro, 3:00 PM'} className="h-11 rounded-xl border-purple-200 font-medium bg-white" value={newSale.delivery_notes} onChange={(e) => setNewSale({...newSale, delivery_notes: e.target.value})} />
                 </div>
               )}
             </div>
@@ -475,6 +478,7 @@ export default function SalesPage() {
                   onChange={(e) => setEditingSale({...editingSale, delivery_type: e.target.value})}
                 >
                   <option value="casillero">Casillero</option>
+                  <option value="delivery">Delivery</option>
                   <option value="personal">Personal</option>
                   <option value="local">Local Directo</option>
                 </select>
@@ -526,6 +530,7 @@ export default function SalesPage() {
                 >
                   <option value="preparando">📦 Preparando Pedido</option>
                   <option value="casillero">🏪 Listo en Casillero</option>
+                  <option value="delivery">🛵 Envío por Delivery</option>
                   <option value="personal">🤝 Entrega Personal / Encuentro</option>
                   <option value="otro">💬 Otro / Personalizado</option>
                 </select>
@@ -616,6 +621,11 @@ export default function SalesPage() {
                         <div className="flex flex-col items-center">
                           <span className="bg-purple-100 text-purple-700 text-[10px] font-extrabold px-3 py-1 rounded-lg uppercase tracking-wider border border-purple-200">📦 Casillero</span>
                           <span className="text-[10px] text-gray-400 mt-1 truncate max-w-[120px]" title={sale.delivery_notes}>{sale.delivery_notes || 'Sin detalles'}</span>
+                        </div>
+                      ) : sale.delivery_type === 'delivery' ? (
+                        <div className="flex flex-col items-center">
+                          <span className="bg-amber-100 text-amber-700 text-[10px] font-extrabold px-3 py-1 rounded-lg uppercase tracking-wider border border-amber-200">🛵 Delivery</span>
+                          <span className="text-[10px] text-gray-400 mt-1 truncate max-w-[120px]" title={sale.delivery_notes}>{sale.delivery_notes}</span>
                         </div>
                       ) : sale.delivery_type === 'personal' ? (
                         <div className="flex flex-col items-center">
