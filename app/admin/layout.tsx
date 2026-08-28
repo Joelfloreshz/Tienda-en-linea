@@ -12,7 +12,8 @@ import {
   CreditCard,
   Home,
   Wallet,
-  Tags
+  Tags,
+  Settings
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -52,6 +53,7 @@ export default function AdminLayout({
     { href: '/admin/categories', icon: Tags, label: 'Categorías' },
     { href: '/admin/debts', icon: CreditCard, label: 'Fiados (Cuentas)' },
     { href: '/admin/expenses', icon: Wallet, label: 'Control de Gastos' },
+    { href: '/admin/settings', icon: Settings, label: 'Configuración' },
   ]
 
   if (loading) {

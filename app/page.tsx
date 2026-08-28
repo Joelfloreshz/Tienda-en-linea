@@ -13,25 +13,48 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const WHATSAPP_NUMBER = "50378085138"
 
+  const [settings, setSettings] = useState({
+    title: 'Descubre tu estilo con',
+    brand_name: 'Lovely Bags',
+    subtitle: 'Explora nuestra colección exclusiva de bolsos. Diseños únicos, calidad premium y el toque perfecto para cada ocasión.',
+    title_color: 'text-gray-900',
+    brand_color_from: 'from-pink-500',
+    brand_color_to: 'to-purple-500',
+    typography: 'font-sans'
+  })
+
   useEffect(() => {
-    async function fetchProducts() {
-      const { data, error } = await supabase
+    async function fetchData() {
+      // Fetch Products
+      const { data: productsData } = await supabase
         .from('products')
         .select('*')
         .gt('stock', 0)
         .order('created_at', { ascending: false })
       
-      if (data) setProducts(data as Product[])
+      if (productsData) setProducts(productsData as Product[])
+      
+      // Fetch Settings
+      const { data: settingsData } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('id', 'hero_banner')
+        .single()
+        
+      if (settingsData) {
+        setSettings(settingsData)
+      }
+
       setLoading(false)
     }
-    fetchProducts()
+    fetchData()
   }, [])
 
   const categories = Array.from(new Set(products.map(p => p.category).filter(Boolean))) as string[]
   const filteredProducts = selectedCategory ? products.filter(p => p.category === selectedCategory) : products
 
   return (
-    <div className="min-h-screen relative overflow-hidden font-sans">
+    <div className={`min-h-screen relative overflow-hidden ${settings.typography}`}>
       {/* Fondo Fijo con Efecto Cristal */}
       <div className="fixed inset-0 z-0">
         <Image 
@@ -63,11 +86,11 @@ export default function Home() {
         {/* Hero Section */}
         <div className="relative py-24 sm:py-32 flex flex-col items-center justify-center text-center px-4 overflow-hidden">
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-pink-200/40 via-transparent to-transparent"></div>
-          <h2 className="text-5xl sm:text-7xl font-extrabold tracking-tight text-gray-900 mb-6 drop-shadow-md">
-            Descubre tu estilo con <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Lovely Bags</span>
+          <h2 className={`text-5xl sm:text-7xl font-extrabold tracking-tight mb-6 drop-shadow-md ${settings.title_color}`}>
+            {settings.title} <span className={`text-transparent bg-clip-text bg-gradient-to-r ${settings.brand_color_from} ${settings.brand_color_to}`}>{settings.brand_name}</span>
           </h2>
           <p className="mt-4 text-xl text-gray-800 font-medium max-w-2xl mx-auto drop-shadow-sm">
-            Explora nuestra colección exclusiva de bolsos. Diseños únicos, calidad premium y el toque perfecto para cada ocasión.
+            {settings.subtitle}
           </p>
         </div>
 
