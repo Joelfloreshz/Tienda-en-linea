@@ -410,21 +410,6 @@ export default function SettingsPage() {
                 </select>
               </div>
             </div>
-
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={saving}
-                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 cursor-pointer"
-              >
-                {saving ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                ) : (
-                  <Save className="h-5 w-5" />
-                )}
-                {saving ? 'Guardando...' : 'Guardar Todo'}
-              </button>
-            </div>
           </div>
         </div>
 
