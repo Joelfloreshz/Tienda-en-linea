@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Settings, Save, AlertCircle, MessageCircle, ExternalLink, Copy, Check, Phone, Sparkles } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
@@ -44,8 +45,8 @@ export default function SettingsPage() {
     fetchSettings()
   }, [])
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSave = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
     setSaving(true)
     setMessage({ text: '', type: '' })
     setSqlNotice(null)
@@ -76,15 +77,19 @@ export default function SettingsPage() {
             type: 'warning'
           })
           setSqlNotice("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS whatsapp_number TEXT DEFAULT '50378085138';")
+          toast.warning('Agrega la columna en Supabase para guardar el número')
         } else {
           setMessage({ text: 'Error al guardar la configuración: ' + fallbackErr.message, type: 'error' })
+          toast.error('Error al guardar: ' + fallbackErr.message)
         }
       } else {
         setMessage({ text: 'Error al guardar la configuración: ' + (error.message || 'Error desconocido'), type: 'error' })
+        toast.error('Error al guardar: ' + (error.message || 'Error desconocido'))
       }
     } else {
       setSettings(prev => ({ ...prev, whatsapp_number: cleanNumber }))
       setMessage({ text: '¡Configuración y número de WhatsApp guardados exitosamente!', type: 'success' })
+      toast.success('¡Guardado exitosamente!')
       setSqlNotice(null)
     }
     setSaving(false)
@@ -158,7 +163,8 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-sm">
+      {/* Header con botón Guardar Cambios visible siempre */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-sm">
         <div>
           <h2 className="text-2xl font-extrabold text-gray-800 flex items-center gap-3">
             <Settings className="h-7 w-7 text-pink-500" />
@@ -168,6 +174,19 @@ export default function SettingsPage() {
             Personaliza el número de WhatsApp de contacto y la información visual de tu tienda.
           </p>
         </div>
+        <button
+          type="button"
+          onClick={() => handleSave()}
+          disabled={saving}
+          className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 cursor-pointer shrink-0"
+        >
+          {saving ? (
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+          ) : (
+            <Save className="h-5 w-5" />
+          )}
+          {saving ? 'Guardando...' : 'Guardar Todo'}
+        </button>
       </div>
 
       {message.text && (
@@ -213,15 +232,15 @@ export default function SettingsPage() {
 
       <form onSubmit={handleSave} className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-6">
-          {/* Card WhatsApp */}
-          <div className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-sm space-y-4">
+          {/* Card WhatsApp con su propio botón dedicado para Guardar */}
+          <div className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-sm space-y-5">
             <div className="flex items-center gap-3 border-b border-gray-100 pb-3">
               <div className="p-2.5 bg-green-500/10 rounded-2xl text-green-600">
                 <Phone className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-800">Número de WhatsApp</h3>
-                <p className="text-xs text-gray-500">Número donde recibirás los pedidos y consultas de los clientes.</p>
+                <h3 className="text-lg font-bold text-gray-800">Número de WhatsApp de la Tienda</h3>
+                <p className="text-xs text-gray-500">Aquí llegarán todos los pedidos y consultas de los clientes.</p>
               </div>
             </div>
 
@@ -235,7 +254,7 @@ export default function SettingsPage() {
                 </div>
                 <input
                   type="text"
-                  className="w-full pl-8 pr-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-green-200 focus:border-green-500 font-mono text-base font-semibold text-gray-800 transition-all"
+                  className="w-full pl-8 pr-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-green-200 focus:border-green-500 font-mono text-base font-semibold text-gray-800 transition-all bg-white"
                   placeholder="50378085138"
                   value={settings.whatsapp_number}
                   onChange={(e) => setSettings({ ...settings, whatsapp_number: e.target.value })}
@@ -252,13 +271,32 @@ export default function SettingsPage() {
                 <span className="text-green-600 font-medium">Enlace: </span>
                 <span className="font-mono font-bold">wa.me/{cleanCurrentPhone}</span>
               </div>
+              <span className="text-green-700 font-medium text-[11px]">Listo para vincular</span>
+            </div>
+
+            {/* BOTÓN DEDICADO PARA GUARDAR EL NÚMERO */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+              <button
+                type="button"
+                onClick={() => handleSave()}
+                disabled={saving}
+                className="w-full sm:flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3.5 px-5 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-60"
+              >
+                {saving ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                ) : (
+                  <Save className="h-5 w-5" />
+                )}
+                {saving ? 'Guardando...' : 'Guardar Número de WhatsApp'}
+              </button>
+
               <a
                 href={`https://wa.me/${cleanCurrentPhone}?text=${encodeURIComponent('¡Hola Lovely Bags! 💕 Prueba de enlace configurado con éxito.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1.5 rounded-xl transition-all shrink-0 shadow-sm hover:scale-105 active:scale-95"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 font-bold px-4 py-3.5 rounded-2xl transition-all shadow-sm hover:scale-105 active:scale-95"
               >
-                Probar chat <ExternalLink className="h-3.5 w-3.5" />
+                Probar chat <ExternalLink className="h-4 w-4" />
               </a>
             </div>
           </div>
@@ -279,7 +317,7 @@ export default function SettingsPage() {
               <label className="block text-sm font-semibold text-gray-700 mb-1">Texto Principal</label>
               <input
                 type="text"
-                className="w-full rounded-2xl border border-gray-200 p-3 outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 transition-all text-sm font-medium"
+                className="w-full rounded-2xl border border-gray-200 p-3 outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 transition-all text-sm font-medium bg-white"
                 value={settings.title}
                 onChange={(e) => setSettings({ ...settings, title: e.target.value })}
                 required
@@ -290,7 +328,7 @@ export default function SettingsPage() {
               <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre de Marca</label>
               <input
                 type="text"
-                className="w-full rounded-2xl border border-gray-200 p-3 outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 transition-all text-sm font-medium"
+                className="w-full rounded-2xl border border-gray-200 p-3 outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 transition-all text-sm font-medium bg-white"
                 value={settings.brand_name}
                 onChange={(e) => setSettings({ ...settings, brand_name: e.target.value })}
                 required
@@ -300,7 +338,7 @@ export default function SettingsPage() {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Subtítulo / Descripción</label>
               <textarea
-                className="w-full rounded-2xl border border-gray-200 p-3 outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 transition-all text-sm font-medium"
+                className="w-full rounded-2xl border border-gray-200 p-3 outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 transition-all text-sm font-medium bg-white"
                 rows={3}
                 value={settings.subtitle}
                 onChange={(e) => setSettings({ ...settings, subtitle: e.target.value })}
@@ -377,14 +415,14 @@ export default function SettingsPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 cursor-pointer"
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 cursor-pointer"
               >
                 {saving ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                 ) : (
                   <Save className="h-5 w-5" />
                 )}
-                {saving ? 'Guardando...' : 'Guardar Cambios'}
+                {saving ? 'Guardando...' : 'Guardar Todo'}
               </button>
             </div>
           </div>
