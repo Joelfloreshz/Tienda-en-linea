@@ -282,7 +282,7 @@ export default function SettingsPage() {
                 <span className="font-mono font-bold">wa.me/{cleanCurrentPhone}</span>
               </div>
               <a
-                href={`https://wa.me/${cleanCurrentPhone}?text=${encodeURIComponent('¡Hola Lovely Bags! 💕 Prueba de enlace configurado con éxito.')}`}
+                href={`https://api.whatsapp.com/send?phone=${cleanCurrentPhone}&text=${encodeURIComponent('¡Hola Lovely Bags! 💕 Prueba de enlace configurado con éxito.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1.5 rounded-xl transition-all shadow-sm hover:scale-105 active:scale-95 shrink-0"

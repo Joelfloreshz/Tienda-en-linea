@@ -215,7 +215,7 @@ export default function Home() {
 
         {/* Botón Flotante Global de WhatsApp */}
         <a
-          href={`https://wa.me/${(settings.whatsapp_number || DEFAULT_WHATSAPP_NUMBER).replace(/\D/g, '') || DEFAULT_WHATSAPP_NUMBER}?text=${encodeURIComponent('¡Hola Lovely Bags! 💕 Tengo una consulta, ¿me pueden ayudar? ✨')}`}
+          href={`https://api.whatsapp.com/send?phone=${(settings.whatsapp_number || DEFAULT_WHATSAPP_NUMBER).replace(/\D/g, '') || DEFAULT_WHATSAPP_NUMBER}&text=${encodeURIComponent('¡Hola Lovely Bags! 💕 Tengo una consulta, ¿me pueden ayudar? ✨')}`}
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-[0_8px_30px_rgb(34,197,94,0.4)] hover:bg-green-600 hover:scale-110 transition-all duration-300 group flex items-center justify-center"

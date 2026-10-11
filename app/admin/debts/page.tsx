@@ -59,7 +59,7 @@ export default function DebtsPage() {
       text += `Queríamos platicar contigo sobre tu cuenta pendiente de $${Number(waDebt.current_balance).toFixed(2)}.`
     }
     
-    return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`
+    return `https://api.whatsapp.com/send?phone=${rawPhone}&text=${encodeURIComponent(text)}`
   }
 
   const handleOpenEdit = (debt: Debt) => {

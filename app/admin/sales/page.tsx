@@ -77,7 +77,7 @@ export default function SalesPage() {
       text += `te escribimos de Lovely Bags sobre tu pedido de ${productName}. 💖`
     }
     
-    return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
+    return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`
   }
 
   const handleOpenEdit = (sale: any) => {
@@ -686,7 +686,7 @@ export default function SalesPage() {
                         )}
                         {sale.delivery_type === 'personal' && (
                           <a 
-                            href={`https://wa.me/${storePhone}?text=${encodeURIComponent(`🔔 *RECORDATORIO DE ENTREGA* 🔔\n\n👤 *Cliente:* ${sale.client_name || 'Sin nombre'}\n👜 *Producto:* ${sale.quantity}x ${productName}\n💰 *A cobrar:* $${Number(sale.price).toFixed(2)}\n📍 *Lugar/Hora:* ${sale.delivery_notes}`)}`}
+                            href={`https://api.whatsapp.com/send?phone=${storePhone}&text=${encodeURIComponent(`🔔 *RECORDATORIO DE ENTREGA* 🔔\n\n👤 *Cliente:* ${sale.client_name || 'Sin nombre'}\n👜 *Producto:* ${sale.quantity}x ${productName}\n💰 *A cobrar:* $${Number(sale.price).toFixed(2)}\n📍 *Lugar/Hora:* ${sale.delivery_notes}`)}`}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center justify-center h-9 w-9 text-orange-500 hover:bg-orange-50 rounded-xl border border-orange-100 bg-white shadow-sm transition-colors"
