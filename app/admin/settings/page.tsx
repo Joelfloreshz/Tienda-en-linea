@@ -25,6 +25,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     async function fetchSettings() {
+      // Intentar cargar de Supabase
       const { data, error } = await supabase
         .from('site_settings')
         .select('*')
@@ -64,8 +65,17 @@ export default function SettingsPage() {
       
     if (error) {
       console.error(error)
+      // Error de permisos de fila (RLS) en Supabase (código 42501)
+      if (error.code === '42501' || error.message?.includes('row-level security')) {
+        setMessage({
+          text: 'Supabase bloqueó el guardado por permisos (RLS). Para solucionarlo, ejecuta el comando de abajo en el SQL Editor de Supabase.',
+          type: 'warning'
+        })
+        setSqlNotice("ALTER TABLE site_settings DISABLE ROW LEVEL SECURITY;")
+        toast.warning('Ejecuta el comando SQL en Supabase para permitir guardar')
+      }
       // Si la columna whatsapp_number no existe aún en Supabase (código 42703)
-      if (error.code === '42703' || error.message?.includes('whatsapp_number')) {
+      else if (error.code === '42703' || error.message?.includes('whatsapp_number')) {
         const { whatsapp_number, ...fallbackSettings } = payload
         const { error: fallbackErr } = await supabase
           .from('site_settings')
@@ -73,7 +83,7 @@ export default function SettingsPage() {
 
         if (!fallbackErr) {
           setMessage({
-            text: '¡Diseño guardado! Para poder guardar el número de WhatsApp en la base de datos de Supabase, ejecuta el comando SQL que aparece abajo.',
+            text: '¡Diseño guardado! Para poder guardar el número de WhatsApp, ejecuta el comando SQL que aparece abajo en Supabase.',
             type: 'warning'
           })
           setSqlNotice("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS whatsapp_number TEXT DEFAULT '50378085138';")
@@ -163,7 +173,7 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header con botón Guardar Cambios visible siempre */}
+      {/* Header con el ÚNICO botón Guardar Todo */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-sm">
         <div>
           <h2 className="text-2xl font-extrabold text-gray-800 flex items-center gap-3">
@@ -209,9 +219,9 @@ export default function SettingsPage() {
               <AlertCircle className="h-5 w-5" />
             </div>
             <div>
-              <h4 className="font-bold text-sm text-amber-900">Activar columna en Supabase (Solo 1 vez)</h4>
+              <h4 className="font-bold text-sm text-amber-900">Solución rápida en Supabase (Solo 1 vez)</h4>
               <p className="text-xs text-amber-700 mt-1 leading-relaxed">
-                Para que puedas cambiar el número en cualquier momento directamente desde aquí, tu base de datos necesita la columna <code>whatsapp_number</code>. Copia este comando y ejecútalo en el <b>SQL Editor</b> de tu panel de Supabase:
+                Supabase bloqueó el guardado porque la tabla <code>site_settings</code> tiene las reglas de seguridad (RLS) activas sin permisos de escritura. Ejecuta este comando en el <b>SQL Editor</b> de tu panel de Supabase para desbloquearla:
               </p>
             </div>
           </div>
@@ -232,8 +242,8 @@ export default function SettingsPage() {
 
       <form onSubmit={handleSave} className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-6">
-          {/* Card WhatsApp con su propio botón dedicado para Guardar */}
-          <div className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-sm space-y-5">
+          {/* Card WhatsApp - Sin botón duplicado, solo enlace de prueba */}
+          <div className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-sm space-y-4">
             <div className="flex items-center gap-3 border-b border-gray-100 pb-3">
               <div className="p-2.5 bg-green-500/10 rounded-2xl text-green-600">
                 <Phone className="h-5 w-5" />
@@ -271,32 +281,13 @@ export default function SettingsPage() {
                 <span className="text-green-600 font-medium">Enlace: </span>
                 <span className="font-mono font-bold">wa.me/{cleanCurrentPhone}</span>
               </div>
-              <span className="text-green-700 font-medium text-[11px]">Listo para vincular</span>
-            </div>
-
-            {/* BOTÓN DEDICADO PARA GUARDAR EL NÚMERO */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-              <button
-                type="button"
-                onClick={() => handleSave()}
-                disabled={saving}
-                className="w-full sm:flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3.5 px-5 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-60"
-              >
-                {saving ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                ) : (
-                  <Save className="h-5 w-5" />
-                )}
-                {saving ? 'Guardando...' : 'Guardar Número de WhatsApp'}
-              </button>
-
               <a
                 href={`https://wa.me/${cleanCurrentPhone}?text=${encodeURIComponent('¡Hola Lovely Bags! 💕 Prueba de enlace configurado con éxito.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 font-bold px-4 py-3.5 rounded-2xl transition-all shadow-sm hover:scale-105 active:scale-95"
+                className="inline-flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1.5 rounded-xl transition-all shadow-sm hover:scale-105 active:scale-95 shrink-0"
               >
-                Probar chat <ExternalLink className="h-4 w-4" />
+                Probar chat <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>
           </div>
