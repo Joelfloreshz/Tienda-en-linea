@@ -154,7 +154,7 @@ export default function ProductPage() {
                     const productUrl = `${origin}/producto/${product.id}`;
                     const text = `¡Hola Lovely Bags! 💕✨ Me encantó el producto *${product.name}* y me gustaría comprarlo. ¿Aún está disponible? 🛍️💖\n\n🔗 Ver producto en la tienda: ${productUrl}`;
                     const targetNumber = whatsappNumber.replace(/\D/g, '') || DEFAULT_WHATSAPP_NUMBER;
-                    window.open(`https://wa.me/${targetNumber}?text=${encodeURIComponent(text)}`, '_blank');
+                    window.open(`https://api.whatsapp.com/send?phone=${targetNumber}&text=${encodeURIComponent(text)}`, '_blank');
                   }}
                   disabled={product.stock <= 0}
                   className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-extrabold text-lg py-5 px-8 rounded-3xl flex items-center justify-center gap-3 transition-all shadow-[0_8px_30px_rgb(236,72,153,0.3)] hover:shadow-[0_8px_40px_rgb(236,72,153,0.5)] hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed group"
