@@ -12,24 +12,27 @@ export default function ProductPage() {
   const params = useParams()
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
-  const WHATSAPP_NUMBER = "50378085138"
+  const DEFAULT_WHATSAPP_NUMBER = "50378085138"
+  const [whatsappNumber, setWhatsappNumber] = useState(DEFAULT_WHATSAPP_NUMBER)
 
   useEffect(() => {
-    async function fetchProduct() {
+    async function fetchData() {
       if (!params.id) return
       
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', params.id as string)
-        .single()
+      const [productRes, settingsRes] = await Promise.all([
+        supabase.from('products').select('*').eq('id', params.id as string).single(),
+        supabase.from('site_settings').select('*').eq('id', 'hero_banner').single()
+      ])
       
-      if (data) {
-        setProduct(data as Product)
+      if (productRes.data) {
+        setProduct(productRes.data as Product)
+      }
+      if (settingsRes.data?.whatsapp_number) {
+        setWhatsappNumber(settingsRes.data.whatsapp_number.replace(/\D/g, '') || DEFAULT_WHATSAPP_NUMBER)
       }
       setLoading(false)
     }
-    fetchProduct()
+    fetchData()
   }, [params.id])
 
   if (loading) {
@@ -150,7 +153,8 @@ export default function ProductPage() {
                     const origin = typeof window !== 'undefined' ? window.location.origin : '';
                     const productUrl = `${origin}/producto/${product.id}`;
                     const text = `¡Hola Lovely Bags! 💕✨ Me encantó el producto *${product.name}* y me gustaría comprarlo. ¿Aún está disponible? 🛍️💖\n\n🔗 Ver producto en la tienda: ${productUrl}`;
-                    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
+                    const targetNumber = whatsappNumber.replace(/\D/g, '') || DEFAULT_WHATSAPP_NUMBER;
+                    window.open(`https://wa.me/${targetNumber}?text=${encodeURIComponent(text)}`, '_blank');
                   }}
                   disabled={product.stock <= 0}
                   className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-extrabold text-lg py-5 px-8 rounded-3xl flex items-center justify-center gap-3 transition-all shadow-[0_8px_30px_rgb(236,72,153,0.3)] hover:shadow-[0_8px_40px_rgb(236,72,153,0.5)] hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed group"

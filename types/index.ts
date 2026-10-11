@@ -55,3 +55,17 @@ export interface Expense {
   date: string
   category: 'casillero' | 'pasajes' | 'empaque' | 'producto' | 'otros'
 }
+
+export interface SiteSettings {
+  id?: string
+  title: string
+  brand_name: string
+  subtitle: string
+  title_color: string
+  brand_color_from: string
+  brand_color_to: string
+  typography: string
+  whatsapp_number?: string
+  updated_at?: string
+}
+

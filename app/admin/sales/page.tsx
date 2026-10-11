@@ -42,6 +42,7 @@ export default function SalesPage() {
   const [waSale, setWaSale] = useState<any>(null)
   const [waGreeting, setWaGreeting] = useState('Buenos días ☀️')
   const [waMessageType, setWaMessageType] = useState('preparando')
+  const [storePhone, setStorePhone] = useState('50378085138')
 
   // Edit Modal State
   const [editModalOpen, setEditModalOpen] = useState(false)
@@ -113,16 +114,20 @@ export default function SalesPage() {
     const startDate = new Date(Number(year), Number(month) - 1, 1).toISOString().split('T')[0]
     const endDate = new Date(Number(year), Number(month), 0).toISOString().split('T')[0]
 
-    const [salesRes, productsRes] = await Promise.all([
+    const [salesRes, productsRes, settingsRes] = await Promise.all([
       supabase.from('sales').select('*, products(name)')
         .gte('date', startDate)
         .lte('date', endDate)
         .order('created_at', { ascending: false }),
-      supabase.from('products').select('*').gt('stock', 0)
+      supabase.from('products').select('*').gt('stock', 0),
+      supabase.from('site_settings').select('*').eq('id', 'hero_banner').single()
     ])
     
     if (salesRes.data) setSales(salesRes.data as Sale[])
     if (productsRes.data) setProducts(productsRes.data as Product[])
+    if (settingsRes.data?.whatsapp_number) {
+      setStorePhone(settingsRes.data.whatsapp_number.replace(/\D/g, '') || '50378085138')
+    }
     setLoading(false)
   }
 
@@ -681,7 +686,7 @@ export default function SalesPage() {
                         )}
                         {sale.delivery_type === 'personal' && (
                           <a 
-                            href={`https://wa.me/50378085138?text=${encodeURIComponent(`🔔 *RECORDATORIO DE ENTREGA* 🔔\n\n👤 *Cliente:* ${sale.client_name || 'Sin nombre'}\n👜 *Producto:* ${sale.quantity}x ${productName}\n💰 *A cobrar:* $${Number(sale.price).toFixed(2)}\n📍 *Lugar/Hora:* ${sale.delivery_notes}`)}`}
+                            href={`https://wa.me/${storePhone}?text=${encodeURIComponent(`🔔 *RECORDATORIO DE ENTREGA* 🔔\n\n👤 *Cliente:* ${sale.client_name || 'Sin nombre'}\n👜 *Producto:* ${sale.quantity}x ${productName}\n💰 *A cobrar:* $${Number(sale.price).toFixed(2)}\n📍 *Lugar/Hora:* ${sale.delivery_notes}`)}`}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center justify-center h-9 w-9 text-orange-500 hover:bg-orange-50 rounded-xl border border-orange-100 bg-white shadow-sm transition-colors"
